@@ -22,9 +22,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-
-
-public class Main extends JavaPlugin implements Listener{
+public class Main extends JavaPlugin implements Listener {
 	public static int seconds = 20;
 	public static Main main;
 	public JavaPlugin localPlugin;
@@ -33,22 +31,20 @@ public class Main extends JavaPlugin implements Listener{
 
 	public static FileConfiguration config;
 	public static FileConfiguration players;
-	
-	
-	
-	
+
 	public static String color(String str) {
-		return ChatColor.translateAlternateColorCodes('&',str);
+		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 
 	public static String dependency = "essentials";
 	public static String topString = color("&e--------------------------");
 	public static String bottomString = color("&e--------------------------");
-	
+
 	public static String systemName = ChatColor.translateAlternateColorCodes('&', "&8【&a防外掛系統&8】");
 	public static String successString = color("&a成功通過GK防外掛測試");
 	public static String failString = color("&c測試失敗,如想通過GK防外掛測試，&e請在每次登入時 在限時內按下按鈕!");
-	public static String kickString = color("&c你已被檢測出第&b%amount%&c次使用外掛版本的Minecraft,為此給予一次警告，請切換至合法的Minecraft版本，否則永久BAN!");
+	public static String kickString = color(
+			"&c你已被檢測出第&b%amount%&c次使用外掛版本的Minecraft,為此給予一次警告，請切換至合法的Minecraft版本，否則永久BAN!");
 	public static String banString = color("&c你已被檢測出第&b%amount%&c次使用外掛版本的Minecraft c懲罰: &4&lBAN%days%天");
 	public static boolean useBan = true;
 	public static int banAttempt = 3;
@@ -68,29 +64,29 @@ public class Main extends JavaPlugin implements Listener{
 	public static String successSubtitleString = color("&c否則將被強制踢出伺服器");
 	public static List<String> helpList = new ArrayList<String>();
 
-	
 	public static void run_server_command(String cmd) {
-		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),cmd);
-	
+		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd);
+
 	}
+
 	static FileConfiguration getPlayers() {
-    	File logs = new File(plugin.getDataFolder(),"players.yml");
-	    if(!logs.exists()) {
-	    	try {
-	    		logs.createNewFile();
-	    	}catch(IOException e) {
-	    		System.out.print("cannot create logs.yml");
-	    	}
-	    }
-	    YamlConfiguration logsz = YamlConfiguration.loadConfiguration(logs);
-	    logsz.options().copyDefaults(true);
-	    return logsz;
-    }
-	
+		File logs = new File(plugin.getDataFolder(), "players.yml");
+		if (!logs.exists()) {
+			try {
+				logs.createNewFile();
+			} catch (IOException e) {
+				System.out.print("cannot create logs.yml");
+			}
+		}
+		YamlConfiguration logsz = YamlConfiguration.loadConfiguration(logs);
+		logsz.options().copyDefaults(true);
+		return logsz;
+	}
+
 	static void savePlayers() {
-    	File file = new File(plugin.getDataFolder(),"players.yml");
+		File file = new File(plugin.getDataFolder(), "players.yml");
 		try {
-	    	players.save(file);
+			players.save(file);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -100,67 +96,95 @@ public class Main extends JavaPlugin implements Listener{
 	@SuppressWarnings("deprecation")
 	public static void checkPlayer(Player p) {
 		UUID uid = p.getUniqueId();
-		if(!Main.lockedList.containsKey(uid)) {
-			Main.lockedList.put(uid,new PlayerData(uid, p.getName()));
+		if (!Main.lockedList.containsKey(uid)) {
+			Main.lockedList.put(uid, new PlayerData(uid, p.getName()));
 		}
-		//premium
-		p.sendTitle(Main.warningTitleString,Main.warningSubtitleString);
+		// premium
+		p.sendTitle(Main.warningTitleString, Main.warningSubtitleString);
 		new BukkitRunnable() {
 			Player localPlayer = p;
 			int secondLeft = Main.seconds;
+
 			@Override
 			public void run() {
 				secondLeft--;
-				if(Main.lockedList.containsKey(localPlayer.getUniqueId())) {
-					if(localPlayer.isOnline()) {
-					
-						//Main.run_server_command("tellraw "+localPlayer.getName()+" [{\"text\":\"【防外掛系統】\",\"bold\":true,\"color\":\"green\"},{\"text\":\"  點我通過測試     \",\"bold\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"."+".say "+Main.lockedList.get(localPlayer.getUniqueId())+"\"}}]");
+				if (Main.lockedList.containsKey(localPlayer.getUniqueId())) {
+					if (localPlayer.isOnline()) {
 
-						localPlayer.sendMessage(Main.systemName+Main.topString);
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}}]");
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}}]");
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}}]");
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}},{\"text\":\" "+Main.remainingTimeString+": \",\"color\":\"red\",\"bold\":false},{\"text\":\""+secondLeft+""+Main.secondString+"\",\"color\":\"yellow\",\"bold\":true}]");
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}}]");
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}}]");
-						Main.run_server_command("tellraw "+localPlayer.getName()+" [\"\",{\"text\":\""+Main.systemName+"\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+".say "+Main.lockedList.get(localPlayer.getUniqueId()).key+"\"}}]");
-						localPlayer.sendMessage(Main.systemName+Main.bottomString);
-				
-					
-					}else {
+						// Main.run_server_command("tellraw "+localPlayer.getName()+"
+						// [{\"text\":\"【防外掛系統】\",\"bold\":true,\"color\":\"green\"},{\"text\":\" 點我通過測試
+						// \",\"bold\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"."+".say
+						// "+Main.lockedList.get(localPlayer.getUniqueId())+"\"}}]");
+
+						localPlayer.sendMessage(Main.systemName + Main.topString);
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}}]");
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}}]");
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}}]");
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}},{\"text\":\" "
+								+ Main.remainingTimeString + ": \",\"color\":\"red\",\"bold\":false},{\"text\":\""
+								+ secondLeft + "" + Main.secondString + "\",\"color\":\"yellow\",\"bold\":true}]");
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}}]");
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}}]");
+						Main.run_server_command("tellraw " + localPlayer.getName() + " [\"\",{\"text\":\""
+								+ Main.systemName
+								+ "\",\"color\":\"green\",\"bold\":true},{\"text\":\"████████████\",\"color\":\"aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+								+ ".say " + Main.lockedList.get(localPlayer.getUniqueId()).key + "\"}}]");
+						localPlayer.sendMessage(Main.systemName + Main.bottomString);
+
+					} else {
 						this.cancel();
-						
+
 					}
-				}else {
+				} else {
 					this.cancel();
 				}
-				
+
 			}
-			
+
 		}.runTaskTimer(plugin, 0, 20);
-	
+
 		new BukkitRunnable() {
 			Player localPlayer = p;
+
 			@Override
 			public void run() {
-				if(Main.lockedList.containsKey(localPlayer.getUniqueId())) {
-					if(localPlayer.isOnline()) {
-						localPlayer.sendMessage(Main.systemName+Main.failString);
+				if (Main.lockedList.containsKey(localPlayer.getUniqueId())) {
+					if (localPlayer.isOnline()) {
+						localPlayer.sendMessage(Main.systemName + Main.failString);
 						localPlayer.kickPlayer(Main.failString);
 						Main.addFails(localPlayer.getUniqueId(), 1);
-					}else {
+					} else {
 						this.cancel();
 					}
 				}
-				
+
 			}
-			
-		}.runTaskLater(plugin, 20*Main.seconds);
+
+		}.runTaskLater(plugin, 20 * Main.seconds);
 	}
+
 	public static void updatePlayer(UUID uid) {
-		
+
 		String suid = uid.toString();
-		if(!Main.players.contains(suid)) {
+		if (!Main.players.contains(suid)) {
 			ConfigurationSection section = Main.players.createSection(suid);
 			OfflinePlayer player = Bukkit.getOfflinePlayer(uid);
 			section.set("name", player.getName());
@@ -169,77 +193,82 @@ public class Main extends JavaPlugin implements Listener{
 			section.set("hacks", 0);
 		}
 	}
+
 	public static void setWhite(UUID uid, boolean bool) {
 		String suid = uid.toString();
 		updatePlayer(uid);
-		Main.players.set(suid+".white", bool);
+		Main.players.set(suid + ".white", bool);
 	}
-	public static void addFails(UUID uid , int amount) {
+
+	public static void addFails(UUID uid, int amount) {
 		String suid = uid.toString();
 		updatePlayer(uid);
-		int current = Main.players.getInt(suid+".fails");
-		Main.players.set(suid+".fails", current+amount);
+		int current = Main.players.getInt(suid + ".fails");
+		Main.players.set(suid + ".fails", current + amount);
 	}
-	public static void addHacks(UUID uid , int amount) {
+
+	public static void addHacks(UUID uid, int amount) {
 		String suid = uid.toString();
 		updatePlayer(uid);
-		int current = Main.players.getInt(suid+".hacks");
-		Main.players.set(suid+".hacks", current+amount);
+		int current = Main.players.getInt(suid + ".hacks");
+		Main.players.set(suid + ".hacks", current + amount);
 	}
+
 	public static void setFails(UUID uid, int fails) {
 		String suid = uid.toString();
 		updatePlayer(uid);
-		Main.players.set(suid+".fails", fails);
+		Main.players.set(suid + ".fails", fails);
 	}
+
 	public static void setHacks(UUID uid, int hacks) {
 		String suid = uid.toString();
 		updatePlayer(uid);
-		Main.players.set(suid+".hacks", hacks);
+		Main.players.set(suid + ".hacks", hacks);
 	}
+
 	public static void success(Player player) {
 		Main.lockedList.remove(player.getUniqueId());
-		player.sendMessage(Main.systemName+Main.successString);
-		player.sendTitle(Main.successTitleString,Main.successSubtitleString);
+		player.sendMessage(Main.systemName + Main.successString);
+		player.sendTitle(Main.successTitleString, Main.successSubtitleString);
 	}
 
 	public static void fail(Player player) {
 		kickHacker(player);
 		Main.lockedList.remove(player.getUniqueId());
 	}
-    public static void kickHacker(Player player) {
-    	addHacks(player.getUniqueId(), 1);
-		int hacks = Main.players.getInt(player.getUniqueId().toString()+".hacks");
 
-		if(hacks < Main.banAttempt) {
+	public static void kickHacker(Player player) {
+		addHacks(player.getUniqueId(), 1);
+		int hacks = Main.players.getInt(player.getUniqueId().toString() + ".hacks");
+
+		if (hacks < Main.banAttempt) {
 			String str = Main.kickString;
-			str = str.replace("%amount%", ""+hacks);
+			str = str.replace("%amount%", "" + hacks);
 			player.kickPlayer(str);
-	    	//Main.run_server_command("cmi broadcast &a玩家&e"+player.getName()+"&c被檢測到第&b&l"+hacks+"&c次使用&4外掛或非正版的Minecraft&c，為此給予警告，再犯則&4&lBAN");
 
-		}else {
-			if(Main.useBan) {
-				int days = hacks-2;
-				int seconds = days*86400;
+		} else {
+			if (Main.useBan) {
+				int days = hacks - 2;
+				int seconds = days * 86400;
 				String str = Main.banString;
-				str = str.replace("%amount%", ""+hacks);
-				str = str.replace("%days%", ""+days);
-		    	//Main.run_server_command("cmi broadcast &a玩家&e"+player.getName()+"&c被檢測到第&4&l"+hacks+"&c次使用&4外掛或非正版的Minecraft&c懲罰: &4&lBAN "+days+"天");
-		    	switch(Main.dependency.toLowerCase()) {
-		    		default:
-		    		case "essential":
-		    		case "essentials":
-		    		case "ess":
-				    	Main.run_server_command("tempban "+player.getName()+" "+days+"d");
-		    		break;
-		    		case "cmi":
-				    	Main.run_server_command("cmi tempban "+player.getName()+" "+seconds+" "+str);
-		    			break;
-		    	}
+				str = str.replace("%amount%", "" + hacks);
+				str = str.replace("%days%", "" + days);
+				switch (Main.dependency.toLowerCase()) {
+				default:
+				case "essential":
+				case "essentials":
+				case "ess":
+					Main.run_server_command("tempban " + player.getName() + " " + days + "d");
+					break;
+				case "cmi":
+					Main.run_server_command("cmi tempban " + player.getName() + " " + seconds + " " + str);
+					break;
+				}
 			}
 		}
-    }
-    
-    public static void loadConfig() {
+	}
+
+	public static void loadConfig() {
 		plugin.reloadConfig();
 		config = plugin.getConfig();
 		Main.dependency = color(config.getString("dependency"));
@@ -269,38 +298,37 @@ public class Main extends JavaPlugin implements Listener{
 		Main.successSubtitleString = color(config.getString("successSubtitleString"));
 
 	}
-	
-    @SuppressWarnings("deprecation")
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
-    	localPlugin = this;
-    	plugin = localPlugin;
-    	config = localPlugin.getConfig();
-    	initiate_server();
+		localPlugin = this;
+		plugin = localPlugin;
+		config = localPlugin.getConfig();
+		initiate_server();
 	}
+
 	public void initiate_server() {
-    	loadConfig();
+		loadConfig();
 		this.saveDefaultConfig();
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 		players = getPlayers();
 		localPlugin.getCommand("gkac").setExecutor(new commandClass());
 		getServer().getPluginManager().registerEvents(new GKEvent(this.getPlugin(Main.class)), this);
-		new BukkitRunnable(){
+		new BukkitRunnable() {
 			@Override
-            public void run() {
+			public void run() {
 				Main.savePlayers();
-            }
-			
+			}
+
 		}.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 200, 200);
-		
+
 	}
-	
+
 	@Override
-    public void onDisable() {
+	public void onDisable() {
 		savePlayers();
 		System.out.print("fuck off");
 	}
 }
-
-
