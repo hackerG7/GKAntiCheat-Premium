@@ -1,0 +1,34 @@
+dependency: essential #this plugin require essentials or cmi
+##############################################################
+topString: '&e------please click the green square------'
+bottomString: '&e-------------------------------'
+##############################################################
+systemName: '&8【&aGKAntiCheat&8】'
+successString: '&aSuccessfully passed GK-Anti-Cheat test'
+failString: '&cYou failed GK-Anti-Cheat test'
+kickString: '&cYou have been detected using hacked client for %amount% times. Please switch it back to legit version or you will get ban!'
+useBan: true
+banAttempt: 3
+banString: '&cYou have been detected using hacked client for %amount% times. &4&lYou are banned for %days% days'
+whiteString: '&ewhiteList'
+failsString: '&cfails'
+hacksString: '&4hacks'
+addWhiteString: '&aSuccessfully added player into whitelist: '
+removeWhiteString: '&aSuccessfully removed player from the whitelist: ' 
+cannotFindPlayerString: '&cCannot find player: ' 
+remainingTimeString: 'Remaining' 
+secondString: 'sec'
+buttonString: '《-Click Me-》'
+reloadString: '&areload completed'
+helpList:
+- ---------------------------------------------------
+- /gkac help                        list GKAntiCheat commands help
+- /gkac reload                     reload the config
+- /gkac add <player>             add player into white list
+- /gkac remove <player>        remove player from white list
+- /gkac check <player>          check player's record
+- ---------------------------------------------------
+warningTitleString: '&b&lpress T'
+warningSubtitleString: '&band click the button'
+successTitleString: '&aSuccessfully passed'
+successSubtitleString: '&athe GKAntiCheat test'
