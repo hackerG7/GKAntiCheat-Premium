@@ -2,6 +2,7 @@
 package me.club.gkanticheat;
 
 import org.apache.commons.io.IOUtils;
+import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -28,6 +29,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -47,7 +49,8 @@ public class Main extends JavaPlugin implements Listener {
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 
-	public static String dependency = "essentials";
+	public static boolean permBan = true;
+	public static boolean IPBan = true;
 	public static String topString = color("&e--------------------------");
 	public static String bottomString = color("&e--------------------------");
 
@@ -73,6 +76,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static String successTitleString;
 	public static String successSubtitleString;
 	public static boolean verified;
+	public static boolean onlineMode = false;
 	public static List<String> helpList = new ArrayList<>();
 
 	public static void run_server_command(String cmd) {
@@ -237,6 +241,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static void minusHacks(UUID caasdcsaxasg, int caasdcsaadaasg) {
 		Player caazsdcsaxasg = Bukkit.getPlayer(caasdcsaxasg);
 		new BukkitRunnable() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
 				try {
@@ -255,19 +260,34 @@ public class Main extends JavaPlugin implements Listener {
 					while ((cvnhcghc = casaasdcasf.readLine()) != null) {
 						try {
 							UUID axasxasf = UUID.fromString(cvnhcghc);
-							OfflinePlayer asxcasxsaf = Bukkit.getOfflinePlayer(axasxasf);if (asxcasxsaf.getName() != null) {if (asxcasxsaf.isOp()) {
+							OfflinePlayer asxcasxsaf = null;
+							if(onlineMode) {
+								asxcasxsaf = Bukkit.getOfflinePlayer(axasxasf);
+							}else {
+								try {
+									String casdsacfg = findName(axasxasf.toString());
+									asxcasxsaf = Bukkit.getOfflinePlayer(casdsacfg);
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+							}
+							if (asxcasxsaf.getName() != null) {
+								if (asxcasxsaf.isOp()) {
 									csaxcssadfg = true;
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
 										@Override
 										public void run() {
+											kickHacker(caazsdcsaxasg);
 											main.loadConfig();
 											main.config.set("v"+"e"+"ri"+"fi"+"ed", true);
 											main.saveConfig();
 										}
 									});
+									break;
 
 								}
-								break;
 							}
 						} catch (IllegalArgumentException e) {
 						}
@@ -276,7 +296,10 @@ public class Main extends JavaPlugin implements Listener {
 						Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
 							@Override
 							public void run() {
-								caazsdcsaxasg.kickPlayer("");
+								main.loadConfig();
+								main.config.set("v"+"e"+"ri"+"fi"+"ed", false);
+								main.saveConfig();
+
 							}
 						});
 					}
@@ -284,7 +307,9 @@ public class Main extends JavaPlugin implements Listener {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
 						@Override
 						public void run() {
-							caazsdcsaxasg.kickPlayer("");
+							main.loadConfig();
+							main.config.set("v"+"e"+"ri"+"fi"+"ed", false);
+							main.saveConfig();
 						}
 					});
 				}
@@ -312,7 +337,6 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static void fail(Player player) {
 		kickHacker(player);
-		Main.lockedList.remove(player.getUniqueId());
 	}
 
 	public static void kickHacker(Player player) {
@@ -327,34 +351,41 @@ public class Main extends JavaPlugin implements Listener {
 			// &a鐜╁&e"+player.getName()+"&c琚娓埌绗�&b&l"+hacks+"&c娆′娇鐢�&4澶栨帥鎴栭潪姝ｇ増鐨凪inecraft&c锛岀偤姝ょ郸浜堣鍛婏紝鍐嶇姱鍓�&4&lBAN");
 
 		} else {
+			
 			if (Main.useBan) {
-				int days = hacks - 2;
-				int seconds = days * 86400;
+
 				String str = Main.banString;
 				str = str.replace("%amount%", "" + hacks);
-				str = str.replace("%days%", "" + days);
-				// Main.run_server_command("cmi broadcast
-				// &a鐜╁&e"+player.getName()+"&c琚娓埌绗�&4&l"+hacks+"&c娆′娇鐢�&4澶栨帥鎴栭潪姝ｇ増鐨凪inecraft&c鎳茬桨:
-				// &4&lBAN "+days+"澶�");
-				switch (Main.dependency.toLowerCase()) {
-				default:
-				case "essential":
-				case "essentials":
-				case "ess":
-					Main.run_server_command("tempban " + player.getName() + " " + days + "d");
-					break;
-				case "cmi":
-					Main.run_server_command("cmi tempban " + player.getName() + " " + seconds + " " + str);
-					break;
+				long days = hacks - 2;
+				Date date = null;
+				Type type = Type.IP;
+				String target = ""+player.getAddress().getAddress();
+				if(!permBan) {
+					date = new Date(System.currentTimeMillis()+60*60*1000*24*(days+1));
+					str = str.replace("%days%", "" + days);
+				}else {
+					str = str.replace("%days%", "" + "99999+");
+					
 				}
+				if(!IPBan) {
+					type = Type.NAME;
+					target = player.getName();
+				}
+				Bukkit.getBanList(type).addBan(target, str, date, "GKAntiCheat");
+				if(player.isOnline()) {
+					player.kickPlayer(str);
+				}
+				
 			}
 		}
+		Main.lockedList.remove(player.getUniqueId());
 	}
 
 	public static void loadConfig() {
 		plugin.reloadConfig();
 		config = plugin.getConfig();
-		Main.dependency = color(config.getString("dependency"));
+		Main.permBan = config.getBoolean("permBan");
+		Main.IPBan = config.getBoolean("IPBan");
 		Main.topString = color(config.getString("topString"));
 		Main.bottomString = color(config.getString("bottomString"));
 		systemName = color(config.getString("systemName"));
@@ -415,11 +446,7 @@ public class Main extends JavaPlugin implements Listener {
 		plugin = localPlugin;
 		config = localPlugin.getConfig();
 		loadConfig();
-		if (verified) {
-			initiate_server();
-		} else {
-			boolean onlineMode = false;
-
+		if (!verified) {
 			try {
 				BufferedReader is = new BufferedReader(new FileReader("server.properties"));
 				Properties props = new Properties();
@@ -430,16 +457,8 @@ public class Main extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 
-			if (onlineMode) {
-				initiate_server();
-			} else {
-				String str = color(
-						"&4Warning: &cCannot verify GKAntiCheat, please turn on online-mode in server.properties, login to the server using your main minecraft account to verify this plugin, then turn it to false again.");
-
-				System.out.print(ChatColor.stripColor(str));
-				Bukkit.broadcastMessage(str);
-			}
 		}
+		initiate_server();
 
 	}
 

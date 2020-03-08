@@ -1,4 +1,3 @@
-dependency: essential
 topString: '&e------please click the green square------'
 bottomString: '&e-------------------------------'
 systemName: '&8[&aGKAntiCheat&8]'
@@ -6,8 +5,12 @@ successString: '&aSuccessfully passed GK-Anti-Cheat test'
 failString: '&cYou failed GK-Anti-Cheat test'
 kickString: '&cYou have been detected using hacked client for %amount% times. Please switch it back to legit version or you will get ban!'
 useBan: true
+
 banAttempt: 3
+permBan: true #ban forever
+IPBan: true #ban ip
 banString: '&cYou have been detected using hacked client for %amount% times. &4&lYou are banned for %days% days'
+
 whiteString: '&ewhiteList'
 failsString: '&cfails'
 hacksString: '&4hacks'
