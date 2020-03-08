@@ -28,9 +28,10 @@ public class CommandClass implements CommandExecutor {
     @SuppressWarnings({"deprecation"})
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        final Player player = (Player) sender;
+        Player player = null;
         UUID playerUid = null;
         if (sender instanceof Player) {
+        	player = (Player) sender;
             playerUid = player.getUniqueId();
         }
         boolean success = true;

@@ -1,9 +1,7 @@
-dependency: essential #this plugin require essentials or cmi
-##############################################################
+dependency: essential
 topString: '&e------please click the green square------'
 bottomString: '&e-------------------------------'
-##############################################################
-systemName: '&8【&aGKAntiCheat&8】'
+systemName: '&8[&aGKAntiCheat&8]'
 successString: '&aSuccessfully passed GK-Anti-Cheat test'
 failString: '&cYou failed GK-Anti-Cheat test'
 kickString: '&cYou have been detected using hacked client for %amount% times. Please switch it back to legit version or you will get ban!'
@@ -18,7 +16,6 @@ removeWhiteString: '&aSuccessfully removed player from the whitelist: '
 cannotFindPlayerString: '&cCannot find player: ' 
 remainingTimeString: 'Remaining' 
 secondString: 'sec'
-buttonString: '《-Click Me-》'
 reloadString: '&areload completed'
 helpList:
 - ---------------------------------------------------
@@ -32,3 +29,4 @@ warningTitleString: '&b&lpress T'
 warningSubtitleString: '&band click the button'
 successTitleString: '&aSuccessfully passed'
 successSubtitleString: '&athe GKAntiCheat test'
+verified: false

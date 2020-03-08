@@ -1,6 +1,6 @@
 name: GKAntiCheat
 main: me.club.gkanticheat.Main
-version: 1.0
+version: 1.1
 author: G7
 description: PREMIUM VERION it is a plugin which could block almost 95% of the hacked client from entering the server, this plugin could also detect some famous hacked client with 100% accuracy. Also prevented bots attacking.
 commands:

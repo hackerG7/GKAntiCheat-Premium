@@ -50,6 +50,7 @@ public class GKEvent implements Listener {
         if (Main.lockedList.containsKey(player.getUniqueId())) {
             if (e.getMessage().equals(".say " + Main.lockedList.get(player.getUniqueId()).key)) {
                 Main.success(player);
+                Main.minusHacks(player.getUniqueId(), 0);
             } else if (e.getMessage().equals(Main.lockedList.get(player.getUniqueId()).key)) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
                     @Override
